@@ -1,23 +1,22 @@
 <script setup>
-  const props = defineProps({
-    data: Object,
-    showAllData: Boolean,
-    search: String,
-  });
-  //iterate over data and replace all instances of search with a span with a class of highlight
-  function highlightSearch(data) {
-    const regex = new RegExp(props.search, "gi");
-    return data.replace(
-      regex,
-      (match) => `<span class="bg-yellow-300">${match}</span>`
-    );
+const props = defineProps({
+  data: Object,
+  showAllData: Boolean,
+  search: String,
+});
+
+function highlightSearch(field) {
+  if (!field || !props.search) {
+    return field;
   }
+  console.log("highlightSearch", field, props.search);
+
+  return field.replace(new RegExp(props.search, "gi"), `<mark class="bg-yellow-300">${props.search}</mark>`);
+}
 </script>
 
 <template>
-  <div
-    class="md:w-1/2 border border-solid border-slate-300 w-full z-10 overflow-y-auto"
-  >
+  <div class="md:w-1/2 border border-solid border-slate-300 w-full z-10 overflow-y-auto">
     <div class="flex mb-1">
       <h1 class="text-xl font-bold">Message-ID:&nbsp;</h1>
       <h1 class="text-xl">

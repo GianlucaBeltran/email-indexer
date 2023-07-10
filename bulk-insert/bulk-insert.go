@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime/pprof"
 )
 
 func insert(path string) {
@@ -41,9 +42,18 @@ func insert(path string) {
 }
 
 func main() {
-	root := "parsed_files"
+	f, err := os.Create("cpu.prof")
+	if err != nil {
 
-	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+		log.Fatal(err)
+
+	}
+	pprof.StartCPUProfile(f)
+	defer pprof.StopCPUProfile()
+
+	root := "../file-reading/parsed_files"
+
+	err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			log.Fatal(err)
 		}

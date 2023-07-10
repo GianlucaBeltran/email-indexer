@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"runtime/pprof"
 	"strings"
 	"time"
 )
@@ -237,11 +238,20 @@ func writeToFile(root string, current string) {
 }
 
 func main() {
+	f, err := os.Create("cpu.prof")
+	if err != nil {
+
+		log.Fatal(err)
+
+	}
+	pprof.StartCPUProfile(f)
+	defer pprof.StopCPUProfile()
+
 	root := "../enron_mail_20110402"
 	// keyValues := make(map[string]int)
 	// fileNewValues := make(map[string]string)
 
-	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+	err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			log.Fatal(err)
 		}
