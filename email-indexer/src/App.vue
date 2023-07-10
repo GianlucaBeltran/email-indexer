@@ -12,10 +12,7 @@ const showAllData = ref(false);
 const currentPage = ref(0);
 const currentMaxPerPage = ref(50);
 
-function test() {
-  console.log(showAllData.value, "test");
-}
-
+// Fetches the first page of emails from the API
 async function getInbox() {
   const response = await fetch(
     "http://localhost:3000/inbox/" + currentPage.value + "-" + currentMaxPerPage.value,
@@ -30,6 +27,7 @@ async function getInbox() {
 }
 getInbox();
 
+// Fetches a single email from the API
 async function getEmail() {
   const response = await fetch(
     "http://localhost:3000/email/" + emailId.value,
@@ -39,11 +37,12 @@ async function getEmail() {
   );
 
   const data = await response.json();
-  console.log(data)
   email.value = data.hits.hits[0]._source;
 }
 
+// Fetches the first page of emails based on the search query from the API
 async function getSearch() {
+  // If theres no search query, get the inbox
   if (search.value === "") {
     getInbox();
     return;
@@ -60,10 +59,13 @@ async function getSearch() {
     return;
   }
   const data = await response.json();
-  console.log(data);
   testData.value = data;
 }
 
+
+// All of the page pagination functions call getSearch() to mantain the search query
+// but also change the current page, the case of having no serach query is handled in
+// getSearch()
 async function getFirstPage() {
   if (currentPage.value === 0) {
     return;
@@ -98,14 +100,17 @@ async function getNextPage() {
   getSearch();
 }
 
+// Every time a new email is clicked on, get the email
 watch(emailId, getEmail);
+
+// Every time the search query changes, get the search
+// reset the current page and the email info
 watch(search, function () {
   currentPage.value = 0;
   emailId.value = "";
   email.value = "";
   getSearch();
 });
-  // watch(showAllData, test);
 </script>
 
 <template>

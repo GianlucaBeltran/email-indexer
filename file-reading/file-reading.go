@@ -238,23 +238,28 @@ func writeToFile(root string, current string) {
 }
 
 func main() {
+	// Create a file for CPU profiling.
 	f, err := os.Create("cpu.prof")
 	if err != nil {
 
 		log.Fatal(err)
 
 	}
+
+	// Start CPU profiling.
 	pprof.StartCPUProfile(f)
 	defer pprof.StopCPUProfile()
 
 	root := "../enron_mail_20110402"
-	// keyValues := make(map[string]int)
-	// fileNewValues := make(map[string]string)
 
+	// walk through the folder
 	err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		// if current path is a directory and it's parent is maildir
+		// then create a new file and write the json to it
 		if d.IsDir() {
 			// get directory parent
 			dir, current := filepath.Split(path)
@@ -271,7 +276,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// fmt.Println(keyValues, len(keyValues))
+
+	// counter of how many files were written
 	fmt.Println(counter)
 	fmt.Printf("filepath.WalkDir() returned %v\n", err)
 }

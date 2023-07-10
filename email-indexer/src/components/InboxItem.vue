@@ -8,14 +8,6 @@
   function emailClicked(emailId) {
     emit("emailClicked", emailId);
   }
-
-  function highlightSearch(data) {
-    // const regex = new RegExp(props.search, "gi");
-    // return data.replace(
-    //   regex,
-    //   (match) => `<span class="bg-yellow-300">${match}</span>`
-    // );
-  }
 </script>
 
 <template>

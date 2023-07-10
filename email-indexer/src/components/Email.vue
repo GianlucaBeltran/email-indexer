@@ -5,6 +5,7 @@ const props = defineProps({
   search: String,
 });
 
+// Highlights the search query in the email fields
 function highlightSearch(field) {
   if (!field || !props.search) {
     return field;

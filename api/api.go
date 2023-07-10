@@ -129,6 +129,7 @@ func getEmail(w http.ResponseWriter, r *http.Request) {
 
 type Search struct {
 	Search_type string                 `json:"search_type"`
+	Sort_fields []string               `json:"sort_fields"`
 	Query       map[string]interface{} `json:"query"`
 	From        int                    `json:"from"`
 	Max_results int                    `json:"max_results"`
@@ -145,6 +146,7 @@ func getSearch(w http.ResponseWriter, r *http.Request) {
 
 	s := Search{
 		Search_type: "querystring",
+		Sort_fields: []string{"-Date"},
 		Query: map[string]interface{}{
 			"term": searchTerm,
 		},
@@ -203,11 +205,8 @@ func main() {
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"https://*", "http://*"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: false,
-		MaxAge:           300, // Maximum value not ignored by any of major browsers
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 	}))
 	r.Get("/inbox/{currentPage}-{currentMaxPerPage}", getInbox)
 	r.Get("/email/{emailID}", getEmail)

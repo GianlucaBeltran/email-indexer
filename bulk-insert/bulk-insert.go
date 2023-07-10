@@ -42,21 +42,26 @@ func insert(path string) {
 }
 
 func main() {
+	// Create a file for CPU profiling.
 	f, err := os.Create("cpu.prof")
 	if err != nil {
-
 		log.Fatal(err)
-
 	}
+
+	// Start CPU profiling.
 	pprof.StartCPUProfile(f)
 	defer pprof.StopCPUProfile()
 
+	// file-reading folder needs to be created manually
 	root := "../file-reading/parsed_files"
 
+	// walk through the folder and insert each file
 	err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		// skip directories
 		if d.IsDir() {
 			return nil
 		}
@@ -66,7 +71,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// fmt.Println(keyValues, len(keyValues))
+
 	fmt.Printf("filepath.WalkDir() returned %v\n", err)
 
 }
